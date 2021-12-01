@@ -1,5 +1,3 @@
-import userService from "../../api/services/userService";
-import dummyService from "../../api/services/dummyService";
 import router from "../../router";
 import supabase from "@/supabase";
 
@@ -27,10 +25,8 @@ export const actions = {
       });
       if (error) throw error;
       if (user && session) {
-        console.log(user);
-        console.log(session);
-        localStorage.setItem("token", session.access_token);
-        router.push("private");
+        context.commit("SET_USER_SESSION",session)
+        router.push("Home");
       }
     } catch (error) {
       setMessage(context, error.message);
@@ -57,9 +53,9 @@ export const actions = {
   async logout(context) {
     try {
       const { error } = await supabase.auth.signOut();
-      localStorage.removeItem("token");
-      console.log("logged out");
       if (error) throw error;
+      context.commit("SET_USER_SESSION",null)
+      router.push("Login");
     } catch (error) {
       setMessage(context, error.message);
     }

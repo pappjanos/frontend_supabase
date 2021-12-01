@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-btn @click="onSignOut">Sign out</v-btn>
+      <v-btn v-if="session" @click="onSignOut">Sign out</v-btn>
+      <div v-if="session">{{}}</div>
     </v-app-bar>
 
     <v-main>
@@ -13,22 +14,25 @@
 
 <script>
 import Snackbar from "./components/general/Snackbar.vue";
-//import { mapActions } from "vuex";
-import store from "./store/index";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "App",
   components: {
     Snackbar,
   },
   data: () => ({
-    //
   }),
-  mounted: () => {},
+  mounted: () => {
+
+  },
+  computed: {
+    ...mapGetters("user", ["session"]),
+  },
   methods: {
-    //...mapActions("user", ["logout"]),
+    ...mapActions("user", ["logout"]),
     async onSignOut() {
-      //this.logout();
-      store.dispatch("user/logout");
+      this.logout();
     },
   },
 };
